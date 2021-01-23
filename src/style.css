@@ -30,3 +30,11 @@
 .blue {
   background-color: rgb(29, 29, 202);
 }
+
+.page {
+  height: 200vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

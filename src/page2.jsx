@@ -5,7 +5,7 @@ const Page2 = (props) => {
     props.history.push(path);
   };
   return (
-    <div>
+    <div className="page">
       <button
         className="button blue"
         onClick={() => {

@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  withRouter
-} from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
+import { Transition } from "react-transition-group";
 import gsap from "gsap";
 
 // pages
@@ -42,21 +39,38 @@ export default function App() {
   const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     animateIn(loader);
-    animateOut(loader);
   });
+  const onEnter = () => {
+    setLoading(true);
+    animateIn(loader);
+  };
+  const onExit = () => {
+    animateOut(loader);
+    setLoading(false);
+  };
+
   return (
     <div className="App">
-      <div ref={(el) => (loader = el)} className="loader"></div>
-
+      {<div ref={(el) => (loader = el)} className="loader"></div>}
       <Router>
         {route.map((item) => {
           return (
-            <Route
-              path={item.path}
-              name={item.name}
-              component={item.Component}
-              exact
-            ></Route>
+            <Route key={item.name} path={item.path} exact>
+              {({ match }) => {
+                return (
+                  <Transition
+                    in={match != null}
+                    timeout={1000}
+                    classNames="page"
+                    onEnter={onEnter}
+                    onExit={onExit}
+                    unmountOnExit
+                  >
+                    <item.Component></item.Component>
+                  </Transition>
+                );
+              }}
+            </Route>
           );
         })}
       </Router>
