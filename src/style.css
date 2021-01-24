@@ -7,10 +7,16 @@
 }
 
 .loader {
+  z-index: 1000;
   width: 0;
   height: 100vh;
   position: fixed;
   background-color: black;
+  color: rgb(136, 136, 136);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .button {
@@ -41,24 +47,22 @@
 .page1 {
   height: 100vh;
 }
-/* .page-enter {
+.fadeTranslate-enter {
   opacity: 0;
-  transform: scale(1.1);
+  position: fixed;
 }
 
-.page-enter-active {
+.fadeTranslate-enter.fadeTranslate-enter-active {
   opacity: 1;
-  transform: scale(1);
-  transition: opacity 300ms, transform 300ms;
+  transition: opacity 500ms ease-in 500ms, transform 500ms ease-in-out 500ms;
 }
 
-.page-exit {
+.fadeTranslate-exit {
   opacity: 1;
-  transform: scale(1);
+  position: fixed;
 }
 
-.page-exit-active {
+.fadeTranslate-exit.fadeTranslate-exit-active {
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 500ms, transform 500ms;
-} */
+  transition: opacity 1000ms ease-in, transform 1000ms ease-in-out;
+}

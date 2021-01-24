@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { Transition } from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import gsap from "gsap";
 
 // pages
@@ -19,29 +19,32 @@ const route = [
 export default function App() {
   // accessing nodes using useRef
 
-  let loader = useRef(null);
-
-  // state variables
-
-  const [isLoading, setLoading] = useState(true);
+  let loader,
+    loading = useRef(null);
 
   //
   useEffect(() => {
-    animateIn(loader);
+    // animateIn(loader);
   });
 
   // enter animation
-  const onEnter = () => {};
+  const onEnter = () => {
+    // to keep the page at the top
+    window.scroll(0, 0);
+    animateIn(loader, loading);
+  };
   // exit animation
   const onExit = () => {
     // to keep the page at the top
     window.scroll(0, 0);
-    animateIn(loader);
+    animateOut(loader, loading);
   };
 
   return (
     <div className="App">
-      <div ref={(el) => (loader = el)} className="loader"></div>
+      <div ref={(el) => (loader = el)} className="loader">
+        <h1 ref={(el) => (loading = el)}> loading</h1>
+      </div>
       {/* Router to manage routes between pages */}
       <Router>
         {route.map((item) => {
@@ -49,35 +52,26 @@ export default function App() {
             <Route key={item.name} path={item.path} exact>
               {({ match }) => {
                 return (
-                  <Transition
+                  <CSSTransition
                     /* Normally, AComponent would move right into the entered state 
                   without passing through the entering state on first mount. 
                   To change that, we need to add a prop called
                   appear to the Transition component used in AComponent*/
                     appear
                     in={match != null} //check if route matches
-                    timeout={200}
-                    onEnter={() => {
-                      console.log("enter 1");
-                    }}
-                    onExit={() => {
-                      console.log("exit 2");
-                    }}
-                    onEntering={() => {
-                      console.log("entering 3");
-                    }}
+                    classNames="fadeTranslate"
+                    timeout={1200}
                     onExiting={() => {
-                      console.log("exiting 4");
+                      onEnter();
                     }}
-                    // onEnter={() => onEnter()}
-
+                    onEntered={() => {
+                      onExit();
+                    }}
                     mountOnEnter={true}
                     unmountOnExit={true}
                   >
-                    {(state) => {
-                      return <item.Component></item.Component>;
-                    }}
-                  </Transition>
+                    {<item.Component></item.Component>}
+                  </CSSTransition>
                 );
               }}
             </Route>
@@ -90,71 +84,76 @@ export default function App() {
 
 // animation when component is mounted
 
-const animateIn = (node) => {
+const animateIn = (node, node2) => {
   gsap.fromTo(
     node,
     {
-      width: 0,
-      duration: 0.8,
+      left: 0,
       ease: "power3.inOut"
     },
     {
-      delay: 1,
+      // delay: 1,
       width: "100vw",
-      duration: 0.8,
+      duration: 1,
       ease: "power3.inOut"
     }
   );
-  gsap.fromTo(
-    node,
-    {
-      right: 0,
-      width: "100vw",
-      duration: 0.8,
-      ease: "power3.inOut"
-    },
-    {
-      right: 0,
-      delay: 1,
-      width: 0,
-      duration: 0.8,
-      ease: "power3.inOut"
-    }
-  );
+  gsap.to(node2, {
+    delay: 0.8,
+    opacity: 1,
+    duration: 0.8,
+    ease: "power3.inOut"
+  });
 };
 
 // animation when component is unmounted
 
-const animateOut = (node) => {
-  gsap.fromTo(
-    node,
-    {
-      right: 0,
-      width: 0,
-      duration: 0.8,
-      ease: "power3.inOut"
-    },
-    {
-      left: 0,
-      width: "100vw",
-      duration: 0.8,
-      ease: "power3.inOut"
-    }
-  );
-  gsap.fromTo(
-    node,
-    {
-      right: 0,
-      width: "100vw",
-      duration: 0.8,
-      ease: "power3.inOut"
-    },
-    {
-      left: 0,
-      delay: 1,
-      width: 0,
-      duration: 0.8,
-      ease: "power3.inOut"
-    }
-  );
+const animateOut = (node, node2) => {
+  gsap.to(node, {
+    left: "100%",
+    delay: 1.4,
+    width: 0,
+    duration: 0.8,
+    ease: "power3.inOut"
+  });
+  gsap.to(node2, {
+    delay: 0.8,
+    opacity: 0,
+    duration: 0.8,
+    ease: "power3.inOut"
+  });
 };
+
+// const animateOut = (node) => {
+//   gsap.fromTo(
+//     node,
+//     {
+//       right: 0,
+//       width: 0,
+//       duration: 0.8,
+//       ease: "power3.inOut"
+//     },
+//     {
+//       left: 0,
+//       width: "100vw",
+//       duration: 0.8,
+//       ease: "power3.inOut"
+//     }
+//   );
+//   gsap.fromTo(
+//     node,
+//     {
+//       right: 0,
+//       width: "100vw",
+//       duration: 0.8,
+//       ease: "power3.inOut"
+//     },
+//     {
+//       left: 0,
+//       delay: 1,
+//       width: 0,
+//       duration: 0.8,
+//       ease: "power3.inOut"
+//     }
+//   );
+// };
