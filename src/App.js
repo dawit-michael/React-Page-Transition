@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import gsap from "gsap";
@@ -46,7 +46,16 @@ export default function App() {
         <h1 ref={(el) => (loading = el)}> loading</h1>
       </div>
       {/* Router to manage routes between pages */}
+
       <Router>
+        <div className="header">
+          <Link to="/page1" className="button cheery link-item">
+            PAGE1
+          </Link>
+          <Link to="/page2" className="button purple link-item">
+            PAGE2
+          </Link>
+        </div>
         {route.map((item) => {
           return (
             <Route key={item.name} path={item.path} exact>
@@ -61,9 +70,11 @@ export default function App() {
                     in={match != null} //check if route matches
                     classNames="fadeTranslate"
                     timeout={1200}
+                    // play animation when component is exiting
                     onExiting={() => {
                       onEnter();
                     }}
+                    // play animation when component has enterd
                     onEntered={() => {
                       onExit();
                     }}
@@ -123,37 +134,3 @@ const animateOut = (node, node2) => {
     ease: "power3.inOut"
   });
 };
-
-// const animateOut = (node) => {
-//   gsap.fromTo(
-//     node,
-//     {
-//       right: 0,
-//       width: 0,
-//       duration: 0.8,
-//       ease: "power3.inOut"
-//     },
-//     {
-//       left: 0,
-//       width: "100vw",
-//       duration: 0.8,
-//       ease: "power3.inOut"
-//     }
-//   );
-//   gsap.fromTo(
-//     node,
-//     {
-//       right: 0,
-//       width: "100vw",
-//       duration: 0.8,
-//       ease: "power3.inOut"
-//     },
-//     {
-//       left: 0,
-//       delay: 1,
-//       width: 0,
-//       duration: 0.8,
-//       ease: "power3.inOut"
-//     }
-//   );
-// };

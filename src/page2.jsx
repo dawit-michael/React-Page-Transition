@@ -5,9 +5,9 @@ const Page2 = (props) => {
     props.history.push(path);
   };
   return (
-    <div>
+    <div className="page purple">
       <button
-        className="button blue"
+        className="button "
         onClick={() => {
           openProject("/page1");
         }}
