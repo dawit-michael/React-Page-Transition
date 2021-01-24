@@ -2,7 +2,10 @@
   "name": "react",
   "version": "1.0.0",
   "description": "React example starter project",
-  "keywords": ["react", "starter"],
+  "keywords": [
+    "react",
+    "starter"
+  ],
   "main": "src/index.js",
   "dependencies": {
     "autoprefixer": "10.2.3",
@@ -12,6 +15,7 @@
     "react-dom": "17.0.1",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.0",
+    "react-transition-group": "4.4.1",
     "tailwindcss": "2.0.2"
   },
   "devDependencies": {
@@ -24,5 +28,10 @@
     "eject": "react-scripts eject",
     "build:scss": "postcss src/styles/tailwind.css -o src/styles/main.css"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

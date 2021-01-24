@@ -1,35 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  withRouter
-} from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
+import { Transition } from "react-transition-group";
 import gsap from "gsap";
 
 // pages
+import Home from "./Home";
 import Page1 from "./page1";
 import Page2 from "./page2";
-
-export const Home = (props) => {
-  const openProject = (path) => {
-    props.history.push(path);
-  };
-  return (
-    <div>
-      {" "}
-      <button
-        className="button purple"
-        onClick={() => {
-          openProject("/page1");
-        }}
-      >
-        go to page1
-      </button>
-    </div>
-  );
-};
 
 const route = [
   { path: "/", name: "home", Component: Home },
@@ -38,31 +17,78 @@ const route = [
 ];
 
 export default function App() {
+  // accessing nodes using useRef
+
   let loader = useRef(null);
-  const [isLoading, setLoading] = useState(false);
+
+  // state variables
+
+  const [isLoading, setLoading] = useState(true);
+
+  //
   useEffect(() => {
     animateIn(loader);
-    animateOut(loader);
   });
+
+  // enter animation
+  const onEnter = () => {};
+  // exit animation
+  const onExit = () => {
+    // to keep the page at the top
+    window.scroll(0, 0);
+    animateIn(loader);
+  };
+
   return (
     <div className="App">
       <div ref={(el) => (loader = el)} className="loader"></div>
-
+      {/* Router to manage routes between pages */}
       <Router>
         {route.map((item) => {
           return (
-            <Route
-              path={item.path}
-              name={item.name}
-              component={item.Component}
-              exact
-            ></Route>
+            <Route key={item.name} path={item.path} exact>
+              {({ match }) => {
+                return (
+                  <Transition
+                    /* Normally, AComponent would move right into the entered state 
+                  without passing through the entering state on first mount. 
+                  To change that, we need to add a prop called
+                  appear to the Transition component used in AComponent*/
+                    appear
+                    in={match != null} //check if route matches
+                    timeout={200}
+                    onEnter={() => {
+                      console.log("enter 1");
+                    }}
+                    onExit={() => {
+                      console.log("exit 2");
+                    }}
+                    onEntering={() => {
+                      console.log("entering 3");
+                    }}
+                    onExiting={() => {
+                      console.log("exiting 4");
+                    }}
+                    // onEnter={() => onEnter()}
+
+                    mountOnEnter={true}
+                    unmountOnExit={true}
+                  >
+                    {(state) => {
+                      return <item.Component></item.Component>;
+                    }}
+                  </Transition>
+                );
+              }}
+            </Route>
           );
         })}
       </Router>
     </div>
   );
 }
+
+// animation when component is mounted
 
 const animateIn = (node) => {
   gsap.fromTo(
@@ -96,6 +122,8 @@ const animateIn = (node) => {
     }
   );
 };
+
+// animation when component is unmounted
 
 const animateOut = (node) => {
   gsap.fromTo(
